@@ -10,6 +10,12 @@ bool isShort(const string &s1,const string &s2)
 {
     return s1.size()<s2.size();
 }
+// return the plural version of word if ctr is greater than 1
+string make_plural(size_t ctr, const string &word,
+const string &ending)
+{
+return (ctr > 1) ? word + ending : word;
+}
 
 void elimDups(vector<string> &words)
 {

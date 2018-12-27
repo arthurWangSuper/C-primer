@@ -6,6 +6,11 @@
 #include <iterator>
 
 using namespace std;
+int fcn(int i)
+{
+    cout<<"ars is is"<<endl;
+    return i;
+}
 
 int main(int argc,char* argv[])
 {
@@ -15,9 +20,14 @@ int main(int argc,char* argv[])
     vector<int> ivec3;
     vector<int> ivec4;
 
-    
     list<int> ilist1;
     list<int> ilist2;
+    
+    //decltype(fcn) f;
+    int (*pf)(int);
+    pf = fcn;
+    pf(1);
+
     /*与unique相同，需要两个重复元素相邻*/    
     unique_copy(ivec1.begin(),ivec1.end(),inserter(ilist1,ilist1.begin()));
 
