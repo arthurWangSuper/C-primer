@@ -5,6 +5,8 @@
 
 using namespace std;
 
+void del
+
 int main(int argc,char* argv[])
 {
 
@@ -34,8 +36,26 @@ int main(int argc,char* argv[])
 	cout<<"use_count is "<<sp1.use_count()<<endl;
 	cout<<"sp1 is "<<*sp0<<"sp2 is "<<*sp2<<endl;
 	
-	//shared_ptr<string> pstr = new string(10,'a');
+	auto str = new string(10,'a');
+	shared_ptr<string> pstr(str);
+	
+	pstr = sp0;
+	auto sp4 = new string("spsiy");
+	cout<<"pstr is "<<*pstr<<endl;
+	
+	/*reset 并指向一个新的内存地址*/
+	/*pstr.reset()*/
+	/*pstr.reset(q,d) 用d来free [q]*/
+	pstr.reset(sp4);
 
-	//cout<<"pstr is "<<*pstr<<endl;
+	cout<<"pstr is "<<*pstr<<endl;
+
+	shared_ptr<int> pi = make_shared<int>(42);
+
+	unique_ptr<string> ustr(new string("string"));
+	
+	shared_ptr<string> sptr(new string("afnkd"));
+	
+
 	return 0;
 }

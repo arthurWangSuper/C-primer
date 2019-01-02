@@ -10,6 +10,13 @@ int main(int argc,char* argv[])
 	string *pstr = new string("i am a a!");
 
 	string str = "adc dd";
+	
+	string *newstr = new string;
+	
+	*newstr = *pstr;
+	cout<<"newstr is "<< newstr<<endl;
+	cout<<"pstr is "<<pstr<<endl;
+
 	int *p = new int(10);
 
 	auto ps = new auto(str);
