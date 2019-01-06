@@ -19,6 +19,12 @@ class Quote {
         { return n*price;}
         virtual ~Quote()= default;//dynamic binding for the destructor
         double print_total();
+
+         void add_item(const Quote& Sale);
+        void add_item(Quote&& Sale);
+        virtual Quote* clone() const & {return new Quote(*this);}
+        virtual Quote* clone() && {return new Quote(std::move(*this);)}
+
     private:
         std::string bookNo; //ISBN number of this item;
     protected:  //子类可以访问
@@ -40,15 +46,20 @@ class Bulk_quote:public Quote{
         Bulk_quote()= default;
         //Bulk_quote(const std::string&, double,std::size_t, double);
         //overrides the base version in order to implement the bulk purchase discount policy
-        //Bulk_quote(const std::string& book, double p,std::size_t qty, double disc):
-        //    Quote(book,p),min_qty(qty),discount(disc){std::cout<<"Bulk_quote construct"<<std::endl;}
-        using Quote::Quote;
+        Bulk_quote(const std::string& book, double p,std::size_t qty, double disc):
+            Quote(book,p),min_qty(qty),discount(disc){std::cout<<"Bulk_quote construct"<<std::endl;}
+        //使用基类的构造函数
+        //using Quote::Quote;
         Bulk_quote(Bulk_quote&){std::cout<<"Bulk_quote copy-construct"<<std::endl;}
         Bulk_quote& operator=(Bulk_quote&){std::cout<<"Bulk_quote assign-construct"<<std::endl;}
         //如果基类没有定义拷贝构造函数或移动拷贝函数，则这个函数是delete的
         Bulk_quote(Bulk_quote&&){std::cout<<"Bulk_quote move-construct"<<std::endl;}
 
         double net_price(std::size_t) const override;
+
+        Bulk_quote* clone() const & {return new Bulk_quote(*this);}
+        Bulk_quote* clone() && {return new Bulk_quote(std::move(*this))}
+
     private:
         std::size_t min_qty = 0; //minimum purchase for the discount to apply
 
