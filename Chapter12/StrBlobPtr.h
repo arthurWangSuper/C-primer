@@ -1,13 +1,13 @@
-#ifdef _STRBLOBPTR_
+#ifndef _STRBLOBPTR_
 #define _STRBLOBPTR_
 
 #include <string>
-#include "../Chapter11/strBlob.h"
+#include "../Chapter11/StrBlob.h"
 
 class StrBlobPtr{
-    private:
-        StrBlobPtr();
-        StrBlobPtr(strBlob &a,size_t sz):wptr(a.data),cur(sz){};
+	public:
+        StrBlobPtr()=default;
+        StrBlobPtr(StrBlob &a,size_t sz):wptr(a.data),cur(sz){};
 
         /*dereference*/
         std::string& deref() const;
@@ -15,17 +15,18 @@ class StrBlobPtr{
         StrBlobPtr& incr(); // prefix version
 
     private:
-        std::shared_ptr<std::vector<string>>
-            check(std::size_t,const string&) const;
-        std::weak_ptr<std::vector<string>> wptr;
+        std::shared_ptr<std::vector<std::string>>
+            check(std::size_t,const std::string&) const;
+        std::weak_ptr<std::vector<std::string>> wptr;
         std::size_t cur = 0;
 };
 
-std::shared_ptr<std::vector<string>>
-            StrBlobPtr::check(std::size_t i,const string &msg) const
+std::shared_ptr<std::vector<std::string>>
+            StrBlobPtr::check(std::size_t i,const std::string &msg) const
 {
  	auto ret = wptr.lock();
-     	
+
+ 	ret->push_back(str);
 	if(!ret)
 		throw std::runtime_error("unbound StrBlobPtr");	
 	
@@ -36,8 +37,8 @@ std::shared_ptr<std::vector<string>>
 }
 std::string& StrBlobPtr::deref() const 
 {
-	auto p = check(curr,"deference past end");
-	return (*p)[curr];
+	auto p = check(cur,"deference past end");
+	return (*p)[cur];
 }
 StrBlobPtr& StrBlobPtr::incr()
 
@@ -45,8 +46,8 @@ StrBlobPtr& StrBlobPtr::incr()
 
 	// if curr already points past the end of the container, can't increment it
 
-	check(curr, "increment past end of StrBlobPtr");
-	++curr; // advance the current state
+	check(cur, "increment past end of StrBlobPtr");
+	++cur; // advance the current state
 
 	return *this;
 
