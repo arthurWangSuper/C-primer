@@ -57,7 +57,7 @@ public:
 
 int main(int argc,char* argv[])
 {
-#if 0
+#if 1
     tuple<int,string> ist;
     ist = make_tuple(1,"tomp");
 
@@ -84,9 +84,10 @@ int main(int argc,char* argv[])
         cout<<"parent‘s process pid is "<<getppid()<<endl;
     }
 
-#endif
+#else
     Solution sol;
     string str = "abcabcdb";
     cout<<sol.lengthOfLongestSubstring(str)<<endl;
+#endif
     return 0;
 }
