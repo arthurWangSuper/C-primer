@@ -9,7 +9,18 @@ void delete_string(string* p)
 	cout<<"bye-bye"<<endl;
 	delete p;
 }
-
+void printcontext(const shared_ptr<string>& sptr)
+{ 
+	weak_ptr<string> wptr(sptr);
+	auto pstr = wptr.lock();
+	if(pstr != nullptr)
+	{
+		cout<<"cont is: "<<*pstr<<"cnt is: "<<sptr.use_count()<<endl;
+	}
+	else{
+		cout<<"ptr is empty"<<endl;
+	}
+}
 int main(int argc,char* argv[])
 {
 
@@ -19,12 +30,12 @@ int main(int argc,char* argv[])
 	sp1 = make_shared<string>(10,'s');
 	
 	auto sp0 = make_shared<string>("string");
-
+	//get ptr from shared_ptr
 	string *sp3 = sp1.get();
-	
+		
 	/*shared_ptr<T> p(q):q is a copy of the shared_ptr*/
 	shared_ptr<string> sp2(sp1);
-
+	
 	sp0.swap(sp2);
 
 	if(!sp0.unique())
@@ -36,8 +47,14 @@ int main(int argc,char* argv[])
 		cout<<"sp0 is unique"<<endl;
 	}
 
-	cout<<"use_count is "<<sp1.use_count()<<endl;
+	cout<<"sp1 use_count is "<<sp1.use_count()<<endl;
 	cout<<"sp1 is "<<*sp0<<"sp2 is "<<*sp2<<endl;
+	//注意此时不可以直接将从sp1 获得的指针交给 sp5构造函数，容易出现问题。
+	shared_ptr<string> sp5(new string(*sp3));
+
+	cout<<"sp1 use_count is "<<sp1.use_count()<<endl;
+
+	cout<<"sp3 use_count is "<<sp5.use_count()<<endl;
 	
 	auto str = new string(10,'a');
 	shared_ptr<string> pstr(str);
@@ -65,10 +82,17 @@ int main(int argc,char* argv[])
 	
 	/*shared_ptr<string>p(q,d); 其中d为callable object*/
 	shared_ptr<string> sptr(new string("afnkd"),delete_string);
+	weak_ptr<string> wptr(sptr); //= make_shared<string>(10,'s');
+	cout<<"lock before count: "<<wptr.use_count()<<endl;
+	//其返回的是shared_ptr<T> 指针
+	//sptr = wptr.lock();
 	
-	shared_ptr<string> lsptr(new string("afnkd"),[](string *pstr){delete pstr;});
-
+	cout<<"sptr count: "<<sptr.use_count()<<" "<<*sptr<<endl;
+	cout<<"lock after count: "<<wptr.use_count()<<endl;
+	
+	printcontext(sptr);
 	sptr.reset();
+	
 
 	return 0;
 }
