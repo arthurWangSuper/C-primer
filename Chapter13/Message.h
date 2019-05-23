@@ -6,11 +6,13 @@
 
 #include <set>
 #include <string>
-
+class Folder;
 
 class Message{
-    friend  class Folder;
-
+    	friend  class Folder;
+	friend  void swap(Message &lhs,Message &rhs);
+	friend std::ostream& print_message(std::ostream &out,const Folder &f);
+	//friend std::ostream& print_folders(std::ostream&,const Message &m);
     public:
         //folders 被隐式初始化为空集合
         explicit Message(const std::string &str=""):contents(str){ }
@@ -33,6 +35,9 @@ class Message{
         void add_to_Folders(const Message&);
         //
         void remove_from_Folders();
+	
+	void addFld(Folder *f);
+	void remFld(Folder *f);
 };
 Message::Message(const Message& m):
     contents(m.contents),folders(m.folders){
@@ -81,8 +86,8 @@ void Message::remove_from_Folders()
 
 void swap(Message &lhs,Message &rhs)
 {
-    using std::swap;
-
+         using std::swap;
+#if 0
      for(auto& f:lhs.folders)
         f->remMsg(this);
      for(auto& f:rhs.folders)
@@ -94,5 +99,13 @@ void swap(Message &lhs,Message &rhs)
         f->addMsg(this);
      for(auto& f:lhs.folders)
         f->addMsg(this);
+#else
+	lhs.remove_from_folder();
+	rhs.remove_from_folder();
+	
+	lhs.add_to_folder(lhs);
+	rhs.add_to_folder(rhs);
+
+#endif
 }
 #endif
